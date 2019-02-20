@@ -2,15 +2,18 @@ package com.example.ecs;
 
 public class Engine {
 	
+	int MAX_ENTITIES = 5;
+	
     EntityManager manager;
-    Systems.Render renderingSystem;
-    Systems.Velocity velocitySystem;	
+    
+    ISystem[] systems = {
+    		new Systems.Render(),
+    		new Systems.Velocity()
+    };
 
     Engine() {
-        manager = new EntityManager(5);
-        renderingSystem = new Systems.Render();
-        velocitySystem = new Systems.Velocity();
-
+        manager = new EntityManager(MAX_ENTITIES);
+        
         int id = manager.createEntity(Component.POS | Component.VEL | Component.RENDER);
         if (id > -1) {
             manager.pos[id].x = 10;
@@ -26,14 +29,13 @@ public class Engine {
             manager.pos[id].y = 0;
             manager.rendering[id].name = "tree";
         }
+        
         startGameLoop();
     }
 
     void startGameLoop() {
-        while(true) {
-            velocitySystem.update(manager);
-            renderingSystem.update(manager);
-        }
+    	for (ISystem system: this.systems)
+    		system.update(manager);
     }	
 
 }

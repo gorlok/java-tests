@@ -2,8 +2,9 @@ package com.example.ecs;
 
 public class Systems {
 	
-    public static class Velocity {
-        public void update(EntityManager manager) {
+    public static class Velocity implements ISystem {
+        @Override
+		public void update(EntityManager manager) {
             int required_components = Component.POS | Component.VEL;
             for (int i = 0; i < manager.size; i++) {
                 if ((manager.flag[i] & required_components) == required_components){
@@ -14,7 +15,8 @@ public class Systems {
         }
     }
 
-    public static class Render {
+    public static class Render implements ISystem {
+    	@Override
         public void update(EntityManager manager) {
             int required_components = Component.POS | Component.RENDER;
             for (int i = 0; i < manager.size; i++) {
